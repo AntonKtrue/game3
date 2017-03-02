@@ -9,10 +9,10 @@ import pythagoras.f.IDimension;
  */
 public class BoardView extends Layer {
     private static final float LINE_WIDTH = 2;
-    private final Loader game;
+    private final Reversi game;
     public final float cellSize;
 
-    public BoardView(Loader game, IDimension viewSize) {
+    public BoardView(Reversi game, IDimension viewSize) {
         this.game = game;
         float maxBoardSize = Math.min(viewSize.width(), viewSize.height()) - 20;
         this.cellSize = (float)Math.floor(maxBoardSize / game.boardSize);

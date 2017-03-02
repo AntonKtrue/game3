@@ -1,9 +1,15 @@
 package com.gamedev.game3.core;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gamedev.game3.core.components.Coord;
+import com.gamedev.game3.core.components.Piece;
+import com.sun.org.apache.xpath.internal.SourceTree;
 import pythagoras.f.IDimension;
-import pythagoras.f.Point;
+
 import react.RMap;
 import react.Slot;
 import react.Value;
@@ -15,31 +21,9 @@ import playn.scene.Pointer;
 
 import tripleplay.anim.Animator;
 
-public class Loader extends SceneGame {
+public class Reversi extends SceneGame {
 
-  public static enum Piece {
-    BLACK, WHITE;
-    public Piece next () { return values()[(ordinal()+1) % values().length]; }
-  }
 
-  public static class Coord {
-    public final int x, y;
-
-    public Coord (int x, int y) {
-      assert x >= 0 && y >= 0;
-      this.x = x;
-      this.y = y;
-    }
-
-    public boolean equals (Coord other) {
-      return other.x == x && other.y == y;
-    }
-    @Override public boolean equals (Object other) {
-      return (other instanceof Coord) && equals((Coord)other);
-    }
-    @Override public int hashCode () { return x ^ y; }
-    @Override public String toString () { return "+" + x + "+" + y; }
-  }
 
   public final int boardSize = 8;
   public final RMap<Coord,Piece> pieces = RMap.create();
@@ -48,9 +32,10 @@ public class Loader extends SceneGame {
   public final Pointer pointer;
   public final Animator anim;
 
-  public Loader (Platform plat) {
-    super(plat, 33); // update our "simulation" 33ms (30 times per second)
 
+  public Reversi(Platform plat) {
+
+    super(plat, 33); // update our "simulation" 33ms (30 times per second)
     // wire up pointer and mouse event dispatch
     pointer = new Pointer(plat, rootLayer, true);
     plat.input().mouseEvents.connect(new Mouse.Dispatcher(rootLayer, false));
@@ -74,12 +59,14 @@ public class Loader extends SceneGame {
 
     // wire up a turn handler
     turn.connect(new Slot<Piece>() {
+
       private boolean lastPlayerPassed = false;
       @Override public void onEmit (Piece color) {
+
         List<Coord> plays = logic.legalPlays(pieces, color);
         if (!plays.isEmpty()) {
           lastPlayerPassed = false;
-          gview.showPlays(plays, color);
+            gview.showPlays(plays, color);
         } else if (lastPlayerPassed) {
           endGame();
         } else {
@@ -95,13 +82,17 @@ public class Loader extends SceneGame {
 
   /** Clears the board and sets the 2x2 set of starting pieces in the middle. */
   private void reset () {
+
     pieces.clear();
     int half = boardSize/2;
     pieces.put(new Coord(half-1, half-1), Piece.WHITE);
     pieces.put(new Coord(half  , half-1), Piece.BLACK);
     pieces.put(new Coord(half-1, half  ), Piece.BLACK);
     pieces.put(new Coord(half  , half  ), Piece.WHITE);
+
+
     turn.updateForce(Piece.BLACK);
+
   }
 
   private void endGame () {

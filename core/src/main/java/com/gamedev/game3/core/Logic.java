@@ -1,5 +1,8 @@
 package com.gamedev.game3.core;
 
+import com.gamedev.game3.core.components.Coord;
+import com.gamedev.game3.core.components.Piece;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +17,7 @@ public class Logic {
         this.boardSize = boardSize;
     }
 
-    public boolean isLegalPlay (Map<Loader.Coord, Loader.Piece> board, Loader.Piece color, Loader.Coord coord) {
+    public boolean isLegalPlay (Map<Coord, Piece> board, Piece color, Coord coord) {
         if(!inBounds(coord.x, coord.y) || board.containsKey(coord)) return false;
         for (int ii = 0; ii < DX.length; ii++) {
             boolean sawOther = false;
@@ -23,7 +26,7 @@ public class Logic {
                 x += DX[ii];
                 y += DY[ii];
                 if (!inBounds(x, y)) break;
-                Loader.Piece piece = board.get(new Loader.Coord(x, y));
+                Piece piece = board.get(new Coord(x, y));
                 if (piece == null) break;
                 else if (piece != color) sawOther = true;
                 else if (sawOther) return true;
@@ -34,8 +37,8 @@ public class Logic {
         return false;
     }
 
-    public void applyPlay (Map<Loader.Coord, Loader.Piece> board, Loader.Piece color, Loader.Coord coord) {
-        List<Loader.Coord> toFlip = new ArrayList<>();
+    public void applyPlay (Map<Coord, Piece> board, Piece color, Coord coord) {
+        List<Coord> toFlip = new ArrayList<>();
         board.put(coord, color);
         for (int ii = 0; ii < DX.length; ii++) {
             int x = coord.x, y = coord.y;
@@ -43,12 +46,12 @@ public class Logic {
                 x += DX[ii];
                 y += DY[ii];
                 if (!inBounds(x, y)) break;
-                Loader.Coord fc = new Loader.Coord(x, y);
-                Loader.Piece piece = board.get(fc);
+                Coord fc = new Coord(x, y);
+                Piece piece = board.get(fc);
                 if (piece == null) break;
                 else if (piece != color) toFlip.add(fc);
                 else {
-                    for (Loader.Coord tf : toFlip) board.put(tf, color);
+                    for (Coord tf : toFlip) board.put(tf, color);
                     break;
                 }
             }
@@ -56,11 +59,11 @@ public class Logic {
         }
     }
 
-    public List<Loader.Coord> legalPlays(Map<Loader.Coord, Loader.Piece> board, Loader.Piece color) {
-        List<Loader.Coord> plays = new ArrayList<>();
+    public List<Coord> legalPlays(Map<Coord, Piece> board, Piece color) {
+        List<Coord> plays = new ArrayList<>();
         for (int yy = 0; yy < boardSize; yy++) {
             for(int xx = 0; xx < boardSize; xx++) {
-                Loader.Coord coord = new Loader.Coord(xx, yy);
+                Coord coord = new Coord(xx, yy);
                 if(board.containsKey(coord)) continue;
                 if(isLegalPlay(board, color, coord)) plays.add(coord);
             }

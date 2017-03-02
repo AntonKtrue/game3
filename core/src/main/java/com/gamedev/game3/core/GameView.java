@@ -1,4 +1,5 @@
 package com.gamedev.game3.core;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,13 +15,13 @@ import playn.scene.*;
 import playn.scene.Mouse;
 import playn.scene.Pointer;
 
-import com.gamedev.game3.core.Loader.Piece;
-import com.gamedev.game3.core.Loader.Coord;
+import com.gamedev.game3.core.components.Piece;
+import com.gamedev.game3.core.components.Coord;
 
 import tripleplay.anim.Animation;
 
 public class GameView extends GroupLayer {
-    private final Loader game;
+    private final Reversi game;
     private final BoardView bview;
     private final GroupLayer pgroup = new GroupLayer();
 
@@ -30,7 +31,7 @@ public class GameView extends GroupLayer {
     private final Sound click;
     private final FlipBatch flip;
 
-    public GameView (Loader game, IDimension viewSize) {
+    public GameView (Reversi game, IDimension viewSize) {
         this.game = game;
         this.bview = new BoardView(game, viewSize);
         this.click = game.plat.assets().getSound("sounds/click");
@@ -56,7 +57,13 @@ public class GameView extends GroupLayer {
         onDisposed(ptex.disposeSlot());
 
         game.pieces.connect(new RMap.Listener<Coord,Piece>() {
-            @Override public void onPut (Coord coord, Piece piece) { setPiece(coord, piece); }
+            @Override public void onPut (Coord coord, Piece piece) {
+                try {
+                    setPiece(coord, piece);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             @Override public void onRemove (Coord coord) { clearPiece(coord); }
         });
     }
@@ -67,6 +74,7 @@ public class GameView extends GroupLayer {
     }
 
     public void showPlays (List<Coord> coords, final Piece color) {
+
         final List<ImageLayer> plays = new ArrayList<>();
         for (final Coord coord : coords) {
             ImageLayer pview = addPiece(coord, color);
@@ -101,7 +109,7 @@ public class GameView extends GroupLayer {
         return pview;
     }
 
-    private void setPiece (Coord at, Piece piece) {
+    private void setPiece (Coord at, Piece piece) throws IOException {
         ImageLayer pview = pviews.get(at);
         if (pview == null) {
             pviews.put(at, pview = addPiece(at, piece));
@@ -141,5 +149,6 @@ public class GameView extends GroupLayer {
     private void clearPiece (Coord at) {
         ImageLayer pview = pviews.remove(at);
         if (pview != null) pview.close();
+
     }
 }

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="game3-html:war">
+    <output-path>$PROJECT_DIR$/html/target</output-path>
+    <root id="archive" name="game3-html-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="game3-html:war exploded" />
+    </root>
+  </artifact>
+</component>

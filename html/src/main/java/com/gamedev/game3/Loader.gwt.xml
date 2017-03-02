@@ -1,0 +1,11 @@
+<module rename-to='game3'>
+  <inherits name='playn.Scene'/>
+  <inherits name='LoaderAssets'/>
+  <inherits name="tripleplay.TriplePlay"/>
+  <source path='core'/>
+  <source path='html'/>
+
+  <public path="resources" />
+
+  <entry-point class='com.gamedev.game3.html.LoaderHtml'/>
+</module>

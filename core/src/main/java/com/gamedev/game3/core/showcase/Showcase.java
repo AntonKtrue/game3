@@ -1,6 +1,7 @@
 package com.gamedev.game3.core.showcase;
 
 import com.gamedev.game3.core.showcase.snake.SnakeDemo;
+import com.gamedev.game3.core.showcase.sprites.SpritesDemo;
 import playn.core.Key;
 import playn.core.Keyboard;
 import playn.core.Platform;
@@ -47,7 +48,8 @@ public class Showcase extends SceneGame {
 
     public final List<Demo> demos = new ArrayList<Demo>(); {
         //TODO add demos
-        demos.add(new SnakeDemo());
+        demos.add(new SnakeDemo(this));
+        demos.add(new SpritesDemo());
     }
 
     public Showcase(Platform plat, DeviceService deviceService) {

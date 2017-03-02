@@ -1,10 +1,7 @@
 package com.gamedev.game3.core.showcase.snake;
 
 import com.gamedev.game3.core.showcase.Showcase;
-import playn.core.Clock;
-import playn.core.Image;
-import playn.core.Key;
-import playn.core.Keyboard;
+import playn.core.*;
 import playn.scene.GroupLayer;
 import playn.scene.ImageLayer;
 import pythagoras.f.Transform;
@@ -15,11 +12,13 @@ import react.Slot;
  * Created by Anton on 02.03.2017.
  */
 public class SnakeDemo extends Showcase.Demo {
-    public SnakeDemo() {
-        super("Snake2");
-    }
-    private Key direction = Key.UNKNOWN;
 
+    private Key direction = Key.UNKNOWN;
+    private final Sound click;
+    public SnakeDemo(final Showcase game) {
+        super("Snake4");
+        this.click = game.plat.assets().getSound("sounds/click");
+    }
     @Override
     public void create(final Showcase game, Closeable.Set onClose) {
         //create a group layer to hold everything
@@ -76,6 +75,7 @@ public class SnakeDemo extends Showcase.Demo {
                         if(ny < 0) {
                             ny = t.ty();
                             direction = Key.DOWN;
+                            click.play();
                         }
 
                         break;
@@ -86,6 +86,7 @@ public class SnakeDemo extends Showcase.Demo {
                         {
                             nx = t.tx();
                             direction = Key.LEFT;
+                            click.play();
                         }
 
                         break;
@@ -96,6 +97,7 @@ public class SnakeDemo extends Showcase.Demo {
                         {
                             ny = t.ty();
                             direction = Key.UP;
+                            click.play();
                         }
 
                         break;
@@ -106,6 +108,7 @@ public class SnakeDemo extends Showcase.Demo {
                         {
                             nx = t.tx();
                             direction = Key.RIGHT;
+                            click.play();
                         }
 
                         break;

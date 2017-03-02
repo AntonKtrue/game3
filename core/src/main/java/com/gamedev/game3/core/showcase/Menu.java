@@ -35,7 +35,7 @@ public class Menu extends Showcase.Demo{
         layer.add(root.layer);
 
         Group buttons;
-        root.add(new Label("PlayN Demos:2"),
+        root.add(new Label("PlayN Demos:4"),
                 buttons = new Group(AxisLayout.vertical().offStretch()),
                 new Label("ESC/BACK key or two-finger tap returns to menu from demo").addStyles(Style.TEXT_WRAP.is(true)),
                 new Label("(renderer: " + game.plat.graphics().getClass().getSimpleName() + " " +

@@ -3,6 +3,8 @@ package com.gamedev.game3.core.showcase.snake;
 import com.gamedev.game3.core.showcase.Showcase;
 import playn.core.Clock;
 import playn.core.Image;
+import playn.core.Key;
+import playn.core.Keyboard;
 import playn.scene.GroupLayer;
 import playn.scene.ImageLayer;
 import pythagoras.f.Transform;
@@ -14,8 +16,9 @@ import react.Slot;
  */
 public class SnakeDemo extends Showcase.Demo {
     public SnakeDemo() {
-        super("Snake");
+        super("Snake2");
     }
+    private Key direction = Key.UNKNOWN;
 
     @Override
     public void create(final Showcase game, Closeable.Set onClose) {
@@ -28,7 +31,7 @@ public class SnakeDemo extends Showcase.Demo {
         Image bgImage = game.plat.assets().getImage("images/showcase/background.png");
         layer.add(new ImageLayer(bgImage).setSize(game.plat.graphics().viewSize).setDepth(-1));
 
-        //create our snake segments
+                        //create our snake segments
         final Image segImage = game.plat.assets().getImage("images/showcase/sprites/pea.png");
         final ImageLayer[] segments = new ImageLayer[25];
         for (int ii = 0; ii < segments.length; ii++) {
@@ -36,12 +39,23 @@ public class SnakeDemo extends Showcase.Demo {
             segments[ii].setDepth(50);
             layer.add(segments[ii]);
         }
+        onClose.add(game.plat.input().keyboardEvents.connect(new Keyboard.KeySlot() {
+            @Override
+            public void onEmit(Keyboard.KeyEvent event) {
+                if(event.key.equals(Key.UP) ||
+                        event.key.equals(Key.DOWN) ||
+                        event.key.equals(Key.RIGHT) ||
+                        event.key.equals(Key.LEFT))
+                direction = event.key;
+            }
+        }));
 
         onClose.add(game.paint.connect(new Slot<Clock>() {
-            private float dx = 10, dy = 5, dd = 1;
+            private float dx = 5, dy = 5, dd = 1;
             @Override
             public void onEmit(Clock clock) {
-                //the tail segments play follow the  leader
+
+                                        //the tail segments play follow the  leader
                 for (int ii = segments.length-1; ii>0; ii--) {
                     ImageLayer cur = segments[ii], prev = segments[ii-1];
                     Transform t1 =cur.transform(), t2 = prev.transform();
@@ -50,8 +64,59 @@ public class SnakeDemo extends Showcase.Demo {
                     t1.setUniformScale(t2.uniformScale());
                     cur.setDepth(prev.depth());
                 }
-                //and  the head segment leads the way
+
+                                    //and  the head segment leads the way
                 ImageLayer first = segments[0];
+                Transform t = first.transform();
+                float nx, ny;
+                switch (direction) {
+                    case UP:
+                        nx = t.tx();
+                        ny = t.ty() - dy;
+                        if(ny < 0) {
+                            ny = t.ty();
+                            direction = Key.DOWN;
+                        }
+
+                        break;
+                    case RIGHT:
+                        nx = t.tx() + dx;
+                        ny = t.ty();
+                        if(nx > game.plat.graphics().viewSize.width()-37)
+                        {
+                            nx = t.tx();
+                            direction = Key.LEFT;
+                        }
+
+                        break;
+                    case DOWN:
+                        nx = t.tx();
+                        ny = t.ty() + dy;
+                        if(ny > game.plat.graphics().viewSize.height()-37)
+                        {
+                            ny = t.ty();
+                            direction = Key.UP;
+                        }
+
+                        break;
+                    case LEFT:
+                        nx = t.tx() - dy;
+                        ny = t.ty();
+                        if(nx < 0)
+                        {
+                            nx = t.tx();
+                            direction = Key.RIGHT;
+                        }
+
+                        break;
+                        default:
+                            nx = t.tx();
+                            ny = t.ty();
+                }
+                t.setTx(nx);
+                t.setTy(ny);
+
+                /**ImageLayer first = segments[0];
                 Transform t = first.transform();
                 float nx = t.tx() + dx, ny = t.ty() + dy, nd = first.depth() + dd;
                 if (nx < 0 || nx > game.plat.graphics().viewSize.width()) {
@@ -69,7 +134,7 @@ public class SnakeDemo extends Showcase.Demo {
                 t.setTx(nx);
                 t.setTy(ny);
                 t.setUniformScale(nd/50f);
-                first.setDepth(nd);
+                first.setDepth(nd);*/
             }
         }));
     }

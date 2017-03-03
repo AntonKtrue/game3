@@ -14,6 +14,7 @@ public class LoaderHtml implements EntryPoint {
 
   @Override public void onModuleLoad () {
     HtmlPlatform.Config config = new HtmlPlatform.Config();
+
     // use config to customize the HTML platform, if needed
     HtmlPlatform plat = new HtmlPlatform(config);
     plat.assets().setPathPrefix("game3/");

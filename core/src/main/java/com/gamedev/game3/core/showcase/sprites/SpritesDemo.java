@@ -19,7 +19,7 @@ import java.util.List;
  * Created by Anton on 02.03.2017.
  */
 public class SpritesDemo extends Showcase.Demo {
-    public SpritesDemo () {super("Sprites");}
+    public SpritesDemo () {super("Sprites2");}
 
     @Override
     public void create(final Showcase game, Closeable.Set onClose) {
